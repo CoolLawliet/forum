@@ -1,32 +1,67 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div id="app">
+        <keep-alive include="Home">
+            <router-view class="router"/>
+        </keep-alive>
+        <Footer v-if="isShow"></Footer>
+        <BackTop :bottom="75" class="op"></BackTop>
     </div>
-    <router-view/>
-  </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+    import Footer from "./components/Footer";
 
-#nav {
-  padding: 30px;
-}
+    export default {
+        name: 'App',
+        data() {
+            return {
+                isShow: true
+            }
+        },
+        watch: {
+            $route() {
+                if (this.$route.path === 'login') {
+                    this.isShow = false
+                } else {
+                    this.isShow = true
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+                }
+            }
+        },
+        components: {
+            Footer
+        },
+    }
+</script>
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+<style scoped>
+    @import "./app.less";
+
+    #app {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .router {
+        /* background: url("../static/img/bgc.jpg") repeat fixed left top; */
+        background-color: #D8E2EB;
+        min-height: calc(100vh - 54px);
+    }
+
+    .op {
+        opacity: 0.3;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: all .2s;
+
+    }
+
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+    {
+        /* opacity: 0.3; */
+        transform: rotateY(180deg)
+    }
 </style>
