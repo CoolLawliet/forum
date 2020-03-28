@@ -8,10 +8,10 @@
                 <section>
                     <ul class="userInfoBox">
                         <li class="avatarlist flex-cc mt20">
-<!--                            <Upload-->
-<!--                                    class="avatar-uploader"-->
-<!--                                    :userInfo = userInfo-->
-<!--                            ></Upload>-->
+                            <Upload
+                                    class="avatar-uploader"
+                                    :userInfo = userInfo
+                            ></Upload>
                         </li>
                         <li class="username flex-cc">
                             <span class="leftTitle">昵称</span>
@@ -66,7 +66,7 @@
                         </li>
                         <li  v-show="state" class="avatarlist bb">
                             <span class="leftTitle">网站logo</span>
-<!--                            <Upload class="avatar-uploader"></Upload>-->
+                            <Upload class="avatar-uploader"></Upload>
                         </li>
                     </ul>
                     <div class="saveInfobtn flex-cc">
@@ -81,7 +81,7 @@
 
 <script>
     import HeaderBar from '../components/HeaderBar'
-    // import Upload from '../components/Upload'
+    import Upload from '../components/Upload'
     import { mapGetters } from 'vuex'
     export default {
         name: 'UserInfo',
@@ -135,7 +135,7 @@
         },
         components: { //定义组件
             HeaderBar,
-            // Upload
+            Upload
         },
 
     }

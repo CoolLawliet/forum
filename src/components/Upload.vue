@@ -10,8 +10,9 @@
 </template>
 
 <script>
-    import qiniu from 'qiniu'
-    import { ak, sk, bucket } from '../../qiniu.config'
+    import qiniu from 'qiniu-js'
+    import axios from 'axios'
+    // import { mapGetters } from "vuex";
     import { encode } from '../utils/util'
     export default {
         data() {
@@ -30,15 +31,21 @@
                 default: () => ({})
             }
         },
-        mounted() {
-            const mac = new qiniu.auth.digest.Mac(ak, sk);
-            const options = {
-                scope: bucket,
-            };
-            const putPolicy = new qiniu.rs.PutPolicy(options);
-            this.token = putPolicy.uploadToken(mac);
+        created() {
+            this.getToken()
+            // const mac = new qiniu.auth.digest.Mac(ak, sk);
+            // const options = {
+            //     scope: bucket,
+            // };
+            // const putPolicy = new qiniu.rs.PutPolicy(options);
+            // this.token = putPolicy.uploadToken(mac);
         },
         methods: {
+            getToken(){
+                this.$axios('/upload/uploadToken').then(res=>{
+                    this.token = res.data.data
+                })
+            },
             fileChange(e) {
                 const _this = this
                 const file = e.target.files[0]
@@ -101,7 +108,7 @@
                             resolve(JSON.parse(xhr.responseText)['key'])
                         }
                     }
-                    xhr.open("POST", url, true);
+                    xhr.open("POST", url,true);
                     xhr.setRequestHeader("Content-Type", "application/octet-stream");
                     xhr.setRequestHeader("Authorization", 'UpToken ' + _this.token);
                     xhr.send(pic);
@@ -115,6 +122,8 @@
             }
         }
     }
+
+
 </script>
 
 <style scoped lang='less'>
