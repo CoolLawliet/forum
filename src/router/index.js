@@ -36,9 +36,9 @@ export default new Router({
 
     },
     {
-      path: '/writeArtical',
-      name: 'WriteArtical',
-      component: ()=>import('../views/WriteAriticle')
+      path: '/WriteArticle',
+      name: 'WriteArticle',
+      component: ()=>import('../views/WriteArticle')
     },
     {
       path: '/*',
