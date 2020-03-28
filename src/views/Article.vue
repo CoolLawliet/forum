@@ -1,11 +1,154 @@
 <template>
     <div class="">
-        Article
+        <HeaderBar></HeaderBar>
+        <div class="article">
+            <div class="content bs">
+                <div class="list-head flex-sc">
+                    <div class="list-head-left flex-sc" @click="showInfo(articleInfo.author)">
+                        <img :src="$crop((articleInfo.author && articleInfo.author.avatar), 45, 45, time)" alt class="list-img cp bs" />
+                        <div class="list-name flex-c-s">
+                            <span class="fs14 c333 cp fwb">{{articleInfo.author && articleInfo.author.name}}</span>
+                            <span class="lh100">
+                  <i class="iconfont fs11">&#xe629;</i>
+                  <span class="c999 fs13 lh100 fwl">{{toTime(articleInfo.create_time)}}</span>
+                  <span class="c999 fs13 lh100 fwl ml5">{{articleInfo.looks || 0}}人阅读</span>
+                </span>
+                        </div>
+                    </div>
+                    <i :class="'list-like iconfont fs22 cccc flex-cc usn' + ((bigger && (articleInfo.likes && articleInfo.likes.includes(userInfo._id))) ? ' bigger-2' : '') + (articleInfo.likes && articleInfo.likes.includes(userInfo._id) ? ' red' : '')" title='点赞' @click="iLike(articleInfo._id, articleInfo.likes)">&#xe61d;</i>
+                </div>
+                <div class="article-title fs-big fwb tc">
+                    {{articleInfo.title}}
+                </div>
+                <!-- <div class="article-content">
+                  {{articleInfo.content}}
+                </div> -->
+                <article class="article-content markdown-body">
+                    <VueShowdown
+                            :markdown='articleInfo.content || ""'
+                            flavor="github"
+                            :options="{
+                  emoji: true,
+                  strikethrough: true,
+                  table: true,
+                  tasklists: true,
+                  smoothLivePreview: true,
+                  smartIndentationFix: true,
+                  openLinksInNewWindow: true,
+                  backslashEscapesHTMLTags: true,
+                  ghCompatibleHeaderId: true
+                }"
+                    ></VueShowdown>
+                    <div class="flex mt30">
+                        <div v-if="articleInfo.personal" class="mr30">
+                            <span class="c000 fs16 mr10">性质: </span>
+                            <i v-if="articleInfo.personal === 'personal'" class="iconfont fwl d fs23 va-3">&#xe659;</i>
+                            <i v-if="articleInfo.personal === 'public'" class="iconfont fwl o fs23 va-3">&#xe601;</i>
+                        </div>
+                        <div v-if="articleInfo.type">
+                            <span class="c000 fs15 mr10">类别: </span>
+                            <router-link :to="'/?type=' + articleInfo.type" tag="a">{{articleInfo.type}}</router-link>
+                        </div>
+                    </div>
+                </article>
+                <Divider :dashed= true>全文完</Divider>
+                <div class="message">
+                    <Message :talkList='talkList' :id='id'></Message>
+                </div>
+            </div>
+
+        </div>
+        <InfoDialog :isOpen='isOpen' :userInfo='showUserInfo' :time='time'></InfoDialog>
     </div>
 </template>
 
 <script>
+    import HeaderBar from '../components/HeaderBar'
+    import Message from '../components/Message'
+    import { mapGetters } from 'vuex'
+    import { VueShowdown } from 'vue-showdown'
+    import { toTime } from '../utils/formatTime.js'
+    import InfoDialog from "../components/InfoDialog";
+    export default {
+        components: {
+            HeaderBar,
+            Message,
+            VueShowdown,
+            InfoDialog
+        },
+        computed: {
+            ...mapGetters(['userInfo'])
+        },
+        data() {
+            return {
+                time: new Date().getTime(),
+                articleInfo: {},
+                talkList: [],
+                id: '',
+                isOpen: false,
+                showUserInfo: {},
+                times: 0,
+                timeStart: null,
+                bigger: NaN,
+                timer: 0
+            };
+        },
+        mounted() {
+            this.getArticleDetail()
+        },
+        methods: {
+            toTime(date) {
+                return toTime(date)
+            },
+            getArticleDetail() {
+                this.$get('/article/detail', {
+                    _id: this.$route.query.id
+                }).then(res => {
+                    if(res.code == 200) {
+                        this.articleInfo = res.data;
+                        this.id = this.$route.query.id;
+                        this.talkList = (res.data.answer && res.data.answer.reverse()) || []
+                    }
+                })
+            },
+            showInfo(author) {
+                this.isOpen = true
+                this.showUserInfo = author
+            },
 
+            closeInfo() {
+                this.isOpen = false
+            },
+
+            iLike(id, likes) {
+                this.times++
+                this.timeStart || (this.timeStart = new Date().getTime());
+                if(this.times == 4) {
+                    if((Date.now() - this.timeStart) < 2500) {
+                        this.$Message.error('你点这么快干嘛??')
+                    }
+                    this.times = 0
+                    this.timeStart = null
+                }
+                clearTimeout(this.timer)
+                this.bigger = true;
+                this.$get('/article/like', {
+                    id,
+                    is_like: !likes.includes(this.userInfo._id)
+                }).then(res => {
+                    if(res.code == 200) {
+                        this.getArticleDetail()
+                        this.$Message.info(res.msg)
+                    }
+                })
+                this.timer = setTimeout(() => {
+                    this.bigger = false
+                    clearTimeout(this.timer)
+                }, 500)
+            }
+        },
+        beforeDestroy() {}
+    };
 </script>
 
 <style scoped lang='less'>
@@ -76,31 +219,6 @@
                 .bigger-2 {
                     animation: bigger 0.4s linear;
                 }
-                // .bigger-1 {
-                //   animation: small 0.4s linear;
-                // }
-                // @keyframes small {
-                //    25% {
-                //     font-size: 100px;
-                //     color: rgba(255, 0, 0, 1);
-                //     opacity: 1;
-                //   }
-                //   50% {
-                //     font-size: 75px;
-                //     color: rgba(255, 0, 0.66);
-                //     opacity: 0.66;
-                //   }
-                //   75% {
-                //     font-size: 50px;
-                //     color: rgba(255, 0, 0, 0.33);
-                //     opacity: 0.33;
-                //   }
-                //   100% {
-                //     font-size: 24px;
-                //     color: #ccc;
-                //     opacity: 0;
-                //   }
-                // }
                 @keyframes bigger {
                     25% {
                         font-size: 24px;
