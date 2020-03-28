@@ -1,11 +1,219 @@
 <template>
     <div class="markdown">
-        writearticle
+        <HeaderBar></HeaderBar>
+        <div class="title">
+            <Input v-model="article.title" class="my-input" placeholder="文章标题">
+                <!-- <span slot="prepend" class="fwb fs17 c999">文章标题</span> -->
+                <Select slot="prepend" v-model="type" size="small" style="width:100px" placeholder="类别">
+                    <Option v-for="item in typeList" :value="item.type" :key="item._id">{{ item.type }}</Option>
+                </Select>
+                <span slot="append"><Button type="info" @click="sendArticle">发帖</Button></span>
+            </Input>
+            <div class="mt10 flec-c oh">
+                <Tooltip content="支持Markdown语法" class="mr20 vl10 ml20">
+                    <i class="iconfont fs23">&#xe6eb;</i>
+                </Tooltip>
+                <RadioGroup v-model="personal" size='large' class="mt10">
+                    <Radio label="personal" :disabled='isSkill'>
+                        <i :class="'iconfont fs23 va-4' + (isSkill ? ' cccc' : ' d')">&#xe659;</i>
+                        <!-- <span>原创</span> -->
+                    </Radio>
+                    <Radio label="public" :disabled='isSkill'>
+                        <i :class="'iconfont fs23 va-4' + (isSkill ? ' cccc' : ' o')">&#xe601;</i>
+                        <!-- <span>转载</span> -->
+                    </Radio>
+                </RadioGroup>
+            </div>
+        </div>
+        <div class="w100 flex-cc mp30">
+            <div class="container">
+                <div class="mark-left" v-if='editArticle'>
+          <textarea class="textarea bs" v-model='article.content' placeholder="文章内容
+支持markdown语法, 如: # title"></textarea>
+                    <Button type="info" ghost size='small' class="preview" @click="showPreview(true)">预览</Button>
+                </div>
+                <!-- <div class="mark-right bs" ref='content'></div> -->
+                <article class="mark-right bs markdown-body" v-if="previewArticle">
+                    <div class="block">
+                        <Button type="info" ghost size='small' class="preview" @click="showPreview(false)">返回</Button>
+                    </div>
+                    <VueShowdown
+                            :markdown='article.content'
+                            flavor="github"
+                            :options="{
+                emoji: true,
+                strikethrough: true,
+                table: true,
+                tasklists: true,
+                smoothLivePreview: true,
+                smartIndentationFix: true,
+                openLinksInNewWindow: true,
+                backslashEscapesHTMLTags: true,
+                ghCompatibleHeaderId: true
+              }"
+                    ></VueShowdown>
+                </article>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+    import HeaderBar from "../components/HeaderBar";
+    import {VueShowdown} from 'vue-showdown'
+    import {mapGetters} from 'vuex'
 
+    export default {
+        components: {
+            HeaderBar,
+            VueShowdown
+        },
+        data() {
+            return {
+                article: {
+                    title: '',
+                    content: ''
+                },
+                previewArticle: true,
+                editArticle: true,
+                // typeList: ['闲聊', 'Javascript', 'Vue', 'React', 'Webpack', 'TypeScript', 'Markdown', 'Jquery', 'Node', 'Python', 'Css', 'Git', '其他'],
+                typeList: [],
+                type: '',
+                personal: 'personal',
+                isSkill: true
+            };
+        },
+        watch: {
+            type(newVal, oldVal) {
+                if (newVal === '闲聊' || newVal === '其他') {
+                    this.isSkill = true
+                } else {
+                    this.isSkill = false
+                }
+            }
+        },
+        computed: {
+            ...mapGetters(['userInfo'])
+        },
+        mounted() {
+            const width = document.documentElement.clientWidth || document.body.clientWidth
+            if (width > 500) {
+                window.addEventListener('resize', this.handleResize, false);
+            }
+            this.handleFirstEnter()
+            this.getType();
+        },
+        methods: {
+            sendArticle() {
+                const {title, content} = this.article;
+                if (title.length < 5) {
+                    this.$Message.info("标题不得少于5个字符");
+                    return;
+                }
+                if (content.length < 15) {
+                    this.$Message.info("内容不得少于15个字符");
+                    return;
+                }
+                if (!this.type) {
+                    this.$Message.info("请选择文章分类");
+                    return;
+                }
+                if (this.type === '闲聊' || this.type === '其他') {
+                    this.$post("/article/sendArticle", {
+                        title,
+                        content,
+                        author: JSON.stringify(this.userInfo),
+                        type: this.type === '其他' ? '其他' : this.type,
+                        personal: '',
+                        looks: 0
+                    }).then(res => {
+                        if (res.code == 200) {
+                            this.$Message.success("发帖成功, 即将回到首页");
+                            setTimeout(() => {
+                                this.$router.push('/')
+                            }, 1800)
+                            this.article = {title: "", content: ""};
+                            // this.getArticleList();
+                        }
+                    });
+                } else {
+                    this.$post("/article/sendArticle", {
+                        title,
+                        content,
+                        author: JSON.stringify(this.userInfo),
+                        type: this.type,
+                        personal: this.personal,
+                        looks: 0
+                    }).then(res => {
+                        if (res.code == 200) {
+                            this.$Message.success("发帖成功, 即将回到首页");
+                            setTimeout(() => {
+                                this.$router.push('/')
+                            }, 1800)
+                            this.article = {title: "", content: ""};
+                        }
+                    });
+                }
+            },
+            showPreview(flag) {
+                this.previewArticle = flag
+                this.editArticle = !flag
+            },
+            handleResize(e) {
+                const width = e.currentTarget.innerWidth;
+                if (width < 500) {
+                    this.previewArticle = false
+                    this.editArticle = true
+                } else {
+                    this.previewArticle = true
+                    this.editArticle = true
+                }
+                // console.log(e.currentTarget.innerWidth);
+            },
+            handleFirstEnter() {
+                const width = document.documentElement.clientWidth || document.body.clientWidth
+                // console.log('width', width);
+
+                if (width < 500) {
+                    this.previewArticle = false
+                    this.editArticle = true
+                } else {
+                    this.previewArticle = true
+                    this.editArticle = true
+                }
+            },
+            getType() {
+                this.$get('/type/getType').then(res => {
+                    // this.typeList.push(res.data[0].type)
+                    let typeLists = res.data;
+                    typeLists.forEach(item => {
+                        this.typeList.push(item)
+                    })
+                })
+            }
+        },
+        destroyed() {
+            // console.log('awsl');
+            window.removeEventListener('resize', this.handleResize, false)
+        },
+        beforeRouteLeave(to, from, next) {
+            // console.log('this', this);
+
+            if (this.article.title || this.article.content) {
+                this.$Modal.confirm({
+                    title: '提醒',
+                    content: '您有编译内容未发布, 确定退出吗, 目前退出无法自动保存!',
+                    okText: '确定退出',
+                    cancelText: '返回',
+                    onOk() {
+                        next()
+                    }
+                })
+            } else {
+                next()
+            }
+        }
+    };
 </script>
 
 <style scoped lang='less'>
