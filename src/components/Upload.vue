@@ -13,7 +13,7 @@
     import qiniu from 'qiniu'
     import { ak, sk, bucket, host } from '../../qiniu.config'
     // import { mapGetters } from "vuex";
-    import { encode } from '@/util/util'
+    import { encode } from '../utils/util'
     export default {
         data() {
             return {
