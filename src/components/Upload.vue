@@ -11,8 +11,7 @@
 
 <script>
     import qiniu from 'qiniu'
-    import { ak, sk, bucket, host } from '../../qiniu.config'
-    // import { mapGetters } from "vuex";
+    import { ak, sk, bucket } from '../../qiniu.config'
     import { encode } from '../utils/util'
     export default {
         data() {
@@ -30,9 +29,6 @@
                 type: Object,
                 default: () => ({})
             }
-        },
-        computed: {
-            // ...mapGetters({userInfo: 'userInfo'})
         },
         mounted() {
             const mac = new qiniu.auth.digest.Mac(ak, sk);
