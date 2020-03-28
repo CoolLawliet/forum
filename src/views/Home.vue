@@ -152,16 +152,16 @@
     import { mapGetters } from "vuex";
     import { timeAgo } from "../utils/formatTime";
     import { showdown, VueShowdown } from 'vue-showdown'
-    // import upload from "@/components/upload/Upload";
+    import Upload from "../components/Upload";
     import HeaderBar from "../components/HeaderBar";
-    // import Footer from "@/components/footer/Footer";
-    // import InfoDialog from "@/components/infoDialog/InfoDialog";
+    import Footer from "../components/Footer";
+    import InfoDialog from "../components/InfoDialog";
     export default {
         components: {
-            // upload,
+            Upload,
             HeaderBar,
-            // Footer,
-            // InfoDialog
+            Footer,
+            InfoDialog
         },
         data() {
             return {
