@@ -1,6 +1,5 @@
 <template>
     <div class="login">
-        <!-- <upload /> -->
         <div class="container">
             <div class="item my-img">
                 <img src="../../static/img/login_usr.png" alt="user">
