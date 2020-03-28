@@ -1,163 +1,15 @@
 <template>
     <div class="">
-        <head-bar></head-bar>
-        <div class="artical">
-            <div class="content bs">
-                <div class="list-head flex-sc">
-                    <div class="list-head-left flex-sc" @click="showInfo(articalInfo.author)">
-                        <img :src="$crop((articalInfo.author && articalInfo.author.avatar), 45, 45, time)" alt class="list-img cp bs" />
-                        <div class="list-name flex-c-s">
-                            <span class="fs14 c333 cp fwb">{{articalInfo.author && articalInfo.author.name}}</span>
-                            <span class="lh100">
-                  <i class="iconfont fs11">&#xe629;</i>
-                  <span class="c999 fs13 lh100 fwl">{{toTime(articalInfo.create_time)}}</span>
-                  <span class="c999 fs13 lh100 fwl ml5">{{articalInfo.looks || 0}}人阅读</span>
-                </span>
-                        </div>
-                    </div>
-                    <i :class="'list-like iconfont fs22 cccc flex-cc usn' + ((bigger && (articalInfo.likes && articalInfo.likes.includes(userInfo._id))) ? ' bigger-2' : '') + (articalInfo.likes && articalInfo.likes.includes(userInfo._id) ? ' red' : '')" title='点赞' @click="iLike(articalInfo._id, articalInfo.likes)">&#xe61d;</i>
-                </div>
-                <div class="artical-title fs-big fwb tc">
-                    {{articalInfo.title}}
-                </div>
-                <!-- <div class="artical-content">
-                  {{articalInfo.content}}
-                </div> -->
-                <article class="artical-content markdown-body">
-                    <VueShowdown
-                            :markdown='articalInfo.content || ""'
-                            flavor="github"
-                            :options="{
-                  emoji: true,
-                  strikethrough: true,
-                  table: true,
-                  tasklists: true,
-                  smoothLivePreview: true,
-                  smartIndentationFix: true,
-                  openLinksInNewWindow: true,
-                  backslashEscapesHTMLTags: true,
-                  ghCompatibleHeaderId: true
-                }"
-                    ></VueShowdown>
-                    <div class="flex mt30">
-                        <div v-if="articalInfo.personal" class="mr30">
-                            <span class="c000 fs16 mr10">性质: </span>
-                            <i v-if="articalInfo.personal === 'personal'" class="iconfont fwl d fs23 va-3">&#xe659;</i>
-                            <i v-if="articalInfo.personal === 'public'" class="iconfont fwl o fs23 va-3">&#xe601;</i>
-                        </div>
-                        <div v-if="articalInfo.type">
-                            <span class="c000 fs15 mr10">类别: </span>
-                            <router-link :to="'/?type=' + articalInfo.type" tag="a">{{articalInfo.type}}</router-link>
-                        </div>
-                    </div>
-                </article>
-                <Divider :dashed= true>全文完</Divider>
-                <div class="message">
-                    <Message :talkList='talkList' :id='id'></Message>
-                </div>
-            </div>
-            <!-- <div class="info">
-
-            </div> -->
-        </div>
-        <InfoDialog :isOpen='isOpen' :userInfo='showUserInfo' :time='time'></InfoDialog>
-        <!-- <Footer></Footer> -->
+        Article
     </div>
 </template>
 
 <script>
-    import HeadBar from '../components/HeaderBar'
-    import Footer from '../components/Footer'
-    import Message from '../components/Message'
-    import { mapGetters } from 'vuex'
-    import { VueShowdown } from 'vue-showdown'
-    import { toTime } from '../utils/formatTime.js'
-    import InfoDialog from "../components/InfoDialog";
-    export default {
-        components: {
-            HeadBar,
-            Footer,
-            Message,
-            VueShowdown,
-            InfoDialog
-        },
-        computed: {
-            ...mapGetters(['userInfo'])
-        },
-        data() {
-            return {
-                time: new Date().getTime(),
-                articalInfo: {},
-                talkList: [],
-                id: '',
-                isOpen: false,
-                showUserInfo: {},
-                times: 0,
-                timeStart: null,
-                bigger: NaN,
-                timer: 0
-            };
-        },
-        mounted() {
-            this.getArticalDetail()
-        },
-        methods: {
-            toTime(date) {
-                return toTime(date)
-            },
-            getArticalDetail() {
-                this.$get('/article/detail', {
-                    _id: this.$route.query.id
-                }).then(res => {
-                    if(res.code == 200) {
-                        this.articalInfo = res.data;
-                        this.id = this.$route.query.id;
-                        this.talkList = (res.data.answer && res.data.answer.reverse()) || []
-                    }
-                })
-            },
-            showInfo(author) {
-                this.isOpen = true
-                this.showUserInfo = author
-            },
 
-            closeInfo() {
-                this.isOpen = false
-            },
-
-            iLike(id, likes) {
-                this.times++
-                this.timeStart || (this.timeStart = new Date().getTime());
-                if(this.times == 4) {
-                    if((Date.now() - this.timeStart) < 2500) {
-                        this.$Message.error('你点这么快干嘛??')
-                    }
-                    this.times = 0
-                    this.timeStart = null
-                }
-                clearTimeout(this.timer)
-                this.bigger = true;
-                this.$get('/article/like', {
-                    id,
-                    is_like: !likes.includes(this.userInfo._id)
-                }).then(res => {
-                    if(res.code == 200) {
-                        this.getArticalDetail()
-                        this.$Message.info(res.msg)
-                    }
-                })
-                this.timer = setTimeout(() => {
-                    this.bigger = false
-                    clearTimeout(this.timer)
-                }, 500)
-            }
-        },
-        beforeDestroy() {}
-    };
 </script>
 
 <style scoped lang='less'>
-    .artical{
+    .article{
         display: flex;
         justify-content: center;
         align-items: flex-start;
@@ -175,12 +27,12 @@
             // text-indent: 2em;
             overflow: hidden;
 
-            .artical-title{
+            .article-title{
                 width: 100%;
                 margin-top: 20px;
                 user-select: text;
             }
-            .artical-content{
+            .article-content{
                 width: 100%;
                 min-height: 400px;
                 font-size: 15px;
@@ -291,7 +143,7 @@
         .info{
             display: none;
         }
-        .artical, .content{
+        .article, .content{
             border-radius: 4px !important;
         }
         .content{
@@ -300,7 +152,7 @@
     }
 </style>
 <style>
-    @import url('github-markdown-css');
+    @import url('~github-markdown-css');
     .markdown-body {
         box-sizing: border-box;
         min-width: 200px;

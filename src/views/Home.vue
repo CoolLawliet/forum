@@ -1,6 +1,5 @@
 <template>
     <div class="home">
-        <!-- <marquee align="absmiddle" behavior="scroll" bgcolor="#ccc" direction="left" height="50px" width="100%" style="margin-top: 100px">不得已, 回复删除啦 (ノへ￣、) </marquee> -->
         <HeaderBar></HeaderBar>
         <div class="content fwb">
             <div class="left">
@@ -8,13 +7,16 @@
                     <div class="info-head flex-cc">
                         <div class="info-img-box flex-cc">
                             <!-- <upload :avatar="userInfo.avatar" /> -->
-                            <img :src="$crop(userInfo.avatar, 93, 93, time)" alt="" v-if='userInfo.name' class="info-img bss cp" @click="showInfo(userInfo)">
+                            <img :src="$crop(userInfo.avatar, 93, 93, time)" alt="" v-if='userInfo.name'
+                                 class="info-img bss cp" @click="showInfo(userInfo)">
                             <Icon type="ios-contact" class='fs95 cp' v-else/>
                         </div>
                     </div>
                     <div class="info-body flex-c-sc">
                         <div class="info-name c000 fwb fs20">{{userInfo.name || '未登录'}}</div>
-                        <div class="info-mark c666 fwl fs12">{{userInfo.name ? (userInfo.tips ? userInfo.tips : '该用户暂未填写签名') : '你还没登陆呢'}}</div>
+                        <div class="info-mark c666 fwl fs12">{{userInfo.name ? (userInfo.tips ? userInfo.tips :
+                            '该用户暂未填写签名') : '你还没登陆呢'}}
+                        </div>
                     </div>
                     <div class="info-message flex-sc">
                         <div class="message-item flex-cc">
@@ -27,7 +29,7 @@
                         </div>
                         <div class="message-item flex-cc">
                             <i class="iconfont fs14 c999 fwl" title='发帖数'>&#xe6b0;</i>
-                            <span class="fs15 c999 ml5">{{userInfo.artical_num || 0}}</span>
+                            <span class="fs15 c999 ml5">{{userInfo.article_num || 0}}</span>
                         </div>
                     </div>
                     <div class="info-foot"></div>
@@ -45,7 +47,7 @@
                                     v-for='(type,index) in typeList'
                                     :key='index'
                                     :class="'flex-r-c aa' + (activedType === type._id.type ? ' c' : '')"
-                                    @click='getArticalList(1, type._id.type)'>{{type._id.type}} ({{type.count}})</a>
+                                    @click='getArticleList(1, type._id.type)'>{{type._id.type}} ({{type.count}})</a>
                         </div>
                     </div>
                 </div>
@@ -53,14 +55,17 @@
             <div class="mid mb20">
                 <div class="head bs">
                     今日话题
-                    <Select  size="large" v-model="activedType" style="width:140px" class="sel" placeholder='分类' @on-change="getArticalList(1, activedType)">
-                        <Option v-for="(item,index) in typeList" :value="item._id.type" :key="index">{{ item._id.type + '(' + item.count + ')' }}</Option>
+                    <Select size="large" v-model="activedType" style="width:140px" class="sel" placeholder='分类'
+                            @on-change="getArticleList(1, activedType)">
+                        <Option v-for="(item,index) in typeList" :value="item._id.type" :key="index">{{ item._id.type +
+                            '(' + item.count + ')' }}
+                        </Option>
                     </Select>
                 </div>
-                <div class="list bs" v-for="(item, index) in (articalList ? articalList : 5)" :key="item._id">
+                <div class="list bs" v-for="(item, index) in (articleList ? articleList : 5)" :key="item._id">
                     <div class="list-head flex-sc">
                         <div class="list-head-left flex-sc" @click="showInfo(item.author)">
-                            <img :src="$crop(item.author.avatar, 35, 35, time)" alt class="list-img cp" />
+                            <img :src="$crop(item.author.avatar, 35, 35, time)" alt class="list-img cp"/>
                             <div class="list-name flex-c-s">
                                 <span :class="'fs14 c333 cp' + (item.author.emil === '2216775643@qq.com' ? ' cm' : '')">{{item.author.name}}</span>
                                 <span class="lh100">
@@ -69,11 +74,14 @@
                 </span>
                             </div>
                         </div>
-                        <i :class="'list-like iconfont fs22 cccc flex-cc usn' + (((bigger == index) && (item.likes.includes(userInfo._id))) ? ' bigger-2' : '') + (item.likes.includes(userInfo._id) ? ' red' : '')" title='点赞' @click="iLike(item._id, index, item.likes)">&#xe61d;</i>
+                        <i :class="'list-like iconfont fs22 cccc flex-cc usn' + (((bigger == index) && (item.likes.includes(userInfo._id))) ? ' bigger-2' : '') + (item.likes.includes(userInfo._id) ? ' red' : '')"
+                           title='点赞' @click="iLike(item._id, index, item.likes)">&#xe61d;</i>
                     </div>
-                    <div class="list-body" @click="articalDetail(item._id)">
+                    <div class="list-body" @click="articleDetail(item._id)">
                         <p class="list-title fs16 c000 fwb cp es1">
-                            <i v-if="item.personal === 'personal'" class="iconfont fwl d fs19 va-1">&#xe60d;</i><i v-if="item.personal === 'public'" class="iconfont fwl o fs19 va-1">&#xe700;</i>{{item.type && '['}}<span class="red fwl fs14">{{item.type}}</span>{{item.type && ']'}}
+                            <i v-if="item.personal === 'personal'" class="iconfont fwl d fs19 va-1">&#xe60d;</i><i
+                                v-if="item.personal === 'public'" class="iconfont fwl o fs19 va-1">&#xe700;</i>{{item.type
+                            && '['}}<span class="red fwl fs14">{{item.type}}</span>{{item.type && ']'}}
                             {{item.title}}
                         </p>
                         <p class="list-content fs13 c666 fwl es2">{{item.content | compile}}</p>
@@ -93,7 +101,7 @@
                 <span class="fs15 c999 mt-2">{{item.answer.length || 0}}</span>
               </span>
                         </div>
-                        <div class="list-message flex-cc c999 fwl mr5 read-more" @click="articalDetail(item._id)">
+                        <div class="list-message flex-cc c999 fwl mr5 read-more" @click="articleDetail(item._id)">
                             阅读更多
                             <i class="iconfont c666 fs12 mt-1">&#xe60e;</i>
                         </div>
@@ -102,8 +110,6 @@
                 <Spin size="large" v-if="loadStyle === 'loading'" class="w100 flex-cc mt20"></Spin>
                 <div v-if="loadStyle === 'loadOver'" class="w100 flex-cc mt20 c999">暂无更多</div>
             </div>
-            <!-- </div>
-            </div>-->
             <div class="right">
                 <div class="send bs">
                     <div class="send-head cfff fs18 fwb flex-cc">发帖</div>
@@ -112,27 +118,27 @@
                                 type="text"
                                 class="input fs15"
                                 placeholder="请输入您的标题"
-                                v-model.trim="artical.title"
+                                v-model.trim="article.title"
                         />
                         <textarea
                                 class="textarea fs15"
                                 cols="30"
                                 rows="10"
                                 placeholder="请输入您的内容"
-                                v-model.trim="artical.content"
+                                v-model.trim="article.content"
                         ></textarea>
                         <div>
                             <i class="iconfont f fwl fs14 ml5">&#xe636;</i>
                             此处发帖默认为[闲聊]分类
                         </div>
                         <!-- <input type="textarea" class="textarea" placeholder="请输入您的内容"> -->
-                        <div class="btn fs16 cfff flex-cc fwn" @click="sendArtical">发布</div>
+                        <div class="btn fs16 cfff flex-cc fwn" @click="sendArticle">发布</div>
                     </div>
                 </div>
                 <div class="sort bs">
                     <div class="sort-head flex-cc fwb fs20 cfff">今日帖子排行</div>
                     <div class="sort-body flex-c-s c333 fs15">
-                        <div v-for="(item, index) in articalSort" :key="index" class="sort-item" @click='articalDetail(item._id)'>
+                        <div v-for="(item, index) in articleSort" :key="index" class="sort-item" @click='articleDetail(item._id)'>
                             <span :class="(index < 3 ? 'fwb red fs16' : 'c000')">{{index + 1}}</span>
                             <span class="sort-name fs14">{{item.title}}</span>
                         </div>
@@ -141,39 +147,31 @@
                 </div>
             </div>
         </div>
-        <!-- <Page :current="1" :total="total" simple class="page flex-cc" @on-change='changeIndex' :page-size='5'/> -->
+
         <InfoDialog :isOpen='isOpen' :userInfo='showUserInfo' :time='time'></InfoDialog>
-        <!-- <Footer></Footer> -->
+
     </div>
 </template>
 
 <script>
-    import Cookie from "js-cookie";
-    import { mapGetters } from "vuex";
+    import {mapGetters} from "vuex";
     import { timeAgo } from "../utils/formatTime";
     import { showdown, VueShowdown } from 'vue-showdown'
-    import Upload from "../components/Upload";
+
     import HeaderBar from "../components/HeaderBar";
-    import Footer from "../components/Footer";
     import InfoDialog from "../components/InfoDialog";
+
     export default {
-        components: {
-            Upload,
-            HeaderBar,
-            Footer,
-            InfoDialog
-        },
         data() {
             return {
-                articalList: [],
+                articleList: [],
                 typeList: [],
-                // typeList: ['全部', 'Javascript', 'Vue', 'React', 'Webpack', 'Markdown', 'Jquery', 'Node', 'Python', 'Css', '闲聊'],
-                artical: {
+                article: {
                     title: "",
                     content: ""
                 },
                 time: new Date().getTime(),
-                articalSort: [],
+                articleSort: [],
                 total: 0,
                 showUserInfo: {},
                 bigger: NaN,
@@ -199,9 +197,30 @@
                 return html
             }
         },
+        mounted() {
+            if(this.$route.query.type) {
+                this.getArticleList(1, this.$route.query.type);
+            } else {
+                this.getArticleList();
+            }
+        },
         methods: {
-            sendArtical() {
-                const { title, content } = this.artical;
+            getArticleList(index = 1, type = '') {
+                this.loadStyle = 'loading'
+                this.$get("/article", {
+                    pageIndex: index,
+                    type: type === '全部' ? '' : type
+                }).then(res => {
+                    if (res.code == 200) {
+                        this.articleList = res.data;
+                        this.pageIndex = 1
+                        this.loadStyle = res.data.length < 5 ? 'loadOver' : 'loadMore'
+                        this.activedType = type === '全部' ? '' : type
+                    }
+                });
+            },
+            sendArticle() {
+                const { title, content } = this.article;
                 if (title.length < 5) {
                     this.$Message.info("标题不得少于5个字符");
                     return;
@@ -219,28 +238,12 @@
                 }).then(res => {
                     if (res.code == 200) {
                         this.$Message.success("发帖成功");
-                        this.artical = { title: "", content: "" };
-                        this.getArticalList();
+                        this.article = { title: "", content: "" };
+                        this.getArticleList();
                     }
                 });
             },
-
-            getArticalList(index = 1, type='') {
-                this.loadStyle = 'loading'
-                this.$get("/article", {
-                    pageIndex: index,
-                    type: type === '全部' ? '' : type
-                }).then(res => {
-                    if (res.code == 200) {
-                        this.articalList = res.data;
-                        this.pageIndex = 1
-                        this.loadStyle = res.data.length < 5 ? 'loadOver' : 'loadMore'
-                        this.activedType = type === '全部' ? '' : type
-                    }
-                });
-            },
-
-            getArticalTypeNum() {
+            getArticleTypeNum() {
                 this.$get("/article/typeNum", {
                     // type:'Vue'
                 }).then(res => {
@@ -250,36 +253,30 @@
                     }
                 });
             },
-
-            getArticalSort() {
+            getArticleSort() {
                 this.$get("/article/sort", {}).then(res => {
                     if (res.code == 200) {
-                        this.articalSort = res.data;
+                        this.articleSort = res.data;
                     }
                 });
             },
-
-
             timesAgo(time) {
                 return timeAgo(time);
             },
-
-            articalDetail(_id) {
+            articleDetail(_id) {
                 this.$router.push({
                     path:  `/article?id=${_id}`
                 });
             },
 
             changeIndex(index) {
-                this.getArticalList(index)
+                this.getArticleList(index)
                 this.pageIndex = index
             },
-
             showInfo(author) {
                 this.isOpen = true,
                     this.showUserInfo = author
             },
-
             closeInfo() {
                 this.isOpen = false
             },
@@ -305,9 +302,9 @@
                     is_like: !likes.includes(this.userInfo._id)
                 }).then(res => {
                     if(res.code == 200) {
-                        this.getArticalList(this.pageIndex)
+                        this.getArticleList(this.pageIndex)
                         this.getUserInfo()
-                        this.getArticalSort()
+                        this.getArticleSort()
                         this.$Message.info(res.msg)
                     }
                 })
@@ -332,7 +329,7 @@
                                     type: this.activedType
                                 }).then(res => {
                                     if (res.code == 200) {
-                                        this.articalList = this.articalList.concat(res.data);
+                                        this.articleList = this.articleList.concat(res.data);
                                         if(res.data.length < 5) {
                                             this.loadStyle = 'loadOver'
                                         } else {
@@ -346,17 +343,10 @@
                 }
             }
         },
-        mounted() {
-            if(this.$route.query.type) {
-                this.getArticalList(1, this.$route.query.type);
-            } else {
-                this.getArticalList();
-            }
-            this.getArticalSort();
-            this.getArticalTypeNum();
-            this.scroll()
+        components: {
+            HeaderBar,
+            InfoDialog
         },
-        beforeDestroy() {}
     };
 </script>
 
@@ -366,9 +356,11 @@
         width: 100%;
         padding-bottom: 1px;
     }
-    .sel{
+
+    .sel {
         display: none;
     }
+
     .ivu-menu-primary {
         box-shadow: 0 0 5px #666;
         opacity: 0.9;
@@ -378,6 +370,7 @@
         top: 0;
         .bgc;
     }
+
     .content {
         width: 100%;
         margin: 30px auto;
@@ -387,18 +380,22 @@
         justify-content: center;
         align-items: flex-start;
         .c;
+
         .left {
             width: 256px;
             height: 100%;
             margin-right: 28px;
+
             .info {
                 width: 100%;
                 background-color: #fff;
+
                 .info-head {
                     width: 100%;
                     height: 100px;
                     position: relative;
                     .bgc;
+
                     .info-img-box {
                         width: 100px;
                         height: 100px;
@@ -406,24 +403,29 @@
                         position: absolute;
                         bottom: -50px;
                         background-color: #fff;
+
                         .info-img {
                             width: 93px;
                             height: 93px;
                             border-radius: 50%;
                             transition: transform 1s;
+
                             &:hover {
                                 transform: rotate(360deg);
                             }
                         }
+
                         .fs95 {
                             font-size: 93px;
                             transition: transform 1s;
+
                             &:hover {
                                 transform: rotate(360deg);
                             }
                         }
                     }
                 }
+
                 .info-body {
                     width: 100%;
                     height: 120px;
@@ -432,21 +434,25 @@
                     border-bottom: 1px solid #ccc;
                     margin-top: 50px;
                 }
+
                 .info-message {
                     width: 100%;
                     height: 60px;
                     padding: 0 30px;
                     box-sizing: border-box;
+
                     .message-item {
                         height: 100%;
                         cursor: pointer;
                         transition: all 0.3s;
+
                         &:hover > i,
                         &:hover > span {
                             .c;
                         }
                     }
                 }
+
                 .info-foot {
                     width: 100%;
                     height: 20px;
@@ -454,11 +460,13 @@
                 }
             }
         }
+
         .mid {
             width: 94%;
             max-width: 600px;
             min-width: 325px;
             height: 100%;
+
             .head {
                 width: 100%;
                 height: 70px;
@@ -472,6 +480,7 @@
                 letter-spacing: 40px;
                 font-size: 30px;
             }
+
             .list {
                 width: 100%;
                 height: auto;
@@ -480,17 +489,20 @@
                 box-sizing: border-box;
                 margin-top: 20px;
                 transition: transform 0.2s;
-                &:hover{
+
+                &:hover {
                     transform: translate(0, -2px);
-                    box-shadow:
-                            0 0 4px #999 !important;
+                    box-shadow: 0 0 4px #999 !important;
                 }
+
                 .list-head {
                     width: 100%;
                     height: 60px;
+
                     .list-head-left {
                         width: 120px;
                         height: 100%;
+
                         .list-img {
                             width: 35px !important;
                             min-width: 35px !important;
@@ -498,26 +510,32 @@
                             border-radius: 50%;
                             margin-right: 8px;
                         }
+
                         .list-name {
                             height: 30px;
                             width: 150px;
                             margin-top: 2px;
+
                             span {
                                 width: 150px;
                             }
                         }
                     }
+
                     .list-like {
                         width: 32px;
                         height: 100%;
                         cursor: pointer;
+
                         &:hover {
                             color: rgb(255, 0, 0);
                         }
                     }
+
                     .bigger-2 {
                         animation: bigger 0.4s linear;
                     }
+
                     @keyframes bigger {
                         25% {
                             font-size: 24px;
@@ -541,17 +559,21 @@
                         }
                     }
                 }
+
                 .list-body {
                     width: 100%;
                     height: auto;
                     border-bottom: 1px solid #ccc;
+
                     &:hover {
                         opacity: 0.85;
                     }
+
                     .list-title {
                         width: 100%;
                         line-height: 30px;
                     }
+
                     .list-content {
                         width: 100%;
                         margin: 0 0 7px 0;
@@ -561,29 +583,36 @@
                         cursor: pointer;
                     }
                 }
+
                 .list-foot {
                     width: 100%;
                     height: 40px;
+
                     .foot-left {
                         width: 120px;
                     }
+
                     .list-message {
                         height: 100%;
                     }
                 }
+
                 .talk {
                     // border-top: 1px solid #ccc;
                     transition: height 0.3s;
                     // padding-bottom: 20px;
                     overflow: hidden;
+
                     .talk-input {
                         width: 100%;
                         padding: 10px 0;
+
                         .bbt-box {
                             position: relative;
                             width: 480px;
                             // width: 80%;
                             height: 38px;
+
                             .bbt {
                                 position: absolute;
                                 width: 0;
@@ -593,6 +622,7 @@
                                 bottom: 0;
                                 transition: width 0.3s;
                             }
+
                             .real-input {
                                 width: 480px;
                                 outline: none;
@@ -600,11 +630,13 @@
                                 border: none;
                                 transition: border-bottom 1s;
                                 font-size: 15px;
+
                                 &:focus + .bbt {
                                     width: 480px;
                                 }
                             }
                         }
+
                         .talk-btn {
                             width: 30px;
                             height: 100%;
@@ -614,6 +646,7 @@
                             border-radius: 10px;
                             font-weight: bold;
                             cursor: pointer;
+
                             &:hover {
                                 // background-color: #eee;
                                 // text-align: center;
@@ -621,9 +654,11 @@
                             }
                         }
                     }
+
                     .talk-list {
                         margin-left: 5px;
                         margin-bottom: 9px;
+
                         &:last-of-type {
                             padding-bottom: 12px;
                         }
@@ -631,6 +666,7 @@
                 }
             }
         }
+
         .right {
             width: 276px;
             height: 100%;
@@ -640,16 +676,19 @@
                 width: 100%;
                 height: auto;
                 background-color: #fff;
+
                 .send-head {
                     width: 100%;
                     height: 50px;
                     // background-color: #4158d0;
                     .bgc;
                 }
+
                 .send-content {
                     width: 100%;
                     padding: 12px;
                     box-sizing: border-box;
+
                     .input {
                         width: 100%;
                         height: 30px;
@@ -661,6 +700,7 @@
                         padding-left: 5px;
                         box-sizing: border-box;
                     }
+
                     .textarea {
                         // text-indent: 1em;
                         width: 100%;
@@ -674,6 +714,7 @@
                         box-sizing: border-box;
                         line-height: 120%;
                     }
+
                     .btn {
                         width: 100%;
                         height: 30px;
@@ -682,6 +723,7 @@
                         .bgc;
                         margin-top: 12px;
                         cursor: pointer;
+
                         &:active {
                             background: linear-gradient(to right top, #4158d0, #c850c0);
                         }
@@ -690,30 +732,36 @@
             }
         }
     }
-    li{
+
+    li {
         list-style: none;
     }
+
     i {
         margin-right: 3px;
     }
-    .category{
+
+    .category {
         padding: 25px 0;
         color: #333;
         font-weight: lighter;
         font-size: 16px;
-        .type-title{
+
+        .type-title {
             padding: 0 0 10px 0;
             border-bottom: 1px dashed #2d8cf0;
-            font-size: 17;
+            font-size: 17px;
             margin-bottom: 5px;
             .c
         }
-        .aa{
-            &:hover{
+
+        .aa {
+            &:hover {
                 text-decoration: underline !important;
             }
         }
     }
+
     .block {
         width: 100%;
         // height: 300px;
@@ -721,6 +769,7 @@
         background-color: #fff;
         position: relative;
         overflow: hidden;
+
         img:first-of-type {
             width: 100%;
             position: absolute;
@@ -728,39 +777,47 @@
             right: -8px;
         }
     }
+
     .sort {
         width: 100%;
         height: auto;
         background-color: #fff;
         margin-top: 20px;
+
         .sort-head {
             width: 100%;
             height: 50px;
             .bgc;
         }
+
         .sort-body {
             padding: 20px 40px;
             box-sizing: border-box;
+
             .sort-item {
                 width: 100%;
                 margin-bottom: 18px;
                 margin-left: 1.8em;
                 text-indent: -1.7em;
                 cursor: pointer;
+
                 span:last-of-type {
                     margin-left: 12px;
                 }
+
                 .sort-name {
                     &:hover {
                         text-decoration: underline;
                     }
                 }
             }
+
             .sort-foot {
                 cursor: pointer;
             }
         }
     }
+
     .img-format {
         width: 25px;
         min-width: 25px;
@@ -768,11 +825,13 @@
         min-height: 25px;
         border-radius: 50%;
     }
+
     .img-format-min {
         width: 22px;
         height: 22px;
         border-radius: 50%;
     }
+
     .page {
         margin: 30px auto;
         width: 153px;
@@ -780,29 +839,36 @@
         height: 30px;
         background-color: #fff;
     }
-    .read-more{
+
+    .read-more {
         cursor: pointer;
-        &:hover{
+
+        &:hover {
         }
     }
+
     .c {
         color: #59758B !important;
     }
+
     .bgc {
         background-color: #59758B;
     }
+
     @media screen and (max-width: 1236px) {
         .left {
             display: none !important;
         }
     }
+
     @media screen and (max-width: 920px) {
         .right {
             display: none !important;
         }
     }
+
     @media screen and (max-width: 600px) {
-        .head{
+        .head {
             letter-spacing: 7px !important;
             height: 44px !important;
             font-size: 21px !important;
@@ -811,32 +877,40 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            .sel{
+
+            .sel {
                 letter-spacing: 0px !important;
                 display: inline-block;
             }
         }
-        .content{
+
+        .content {
             margin-top: 0px;
         }
-        .w80{
+
+        .w80 {
             width: 85%;
         }
-        .real-input{
+
+        .real-input {
             width: 100% !important;
         }
-        .bbt-box{
+
+        .bbt-box {
             width: 85%;
         }
-        .bbt-box{
+
+        .bbt-box {
             padding: 0 18px !important;
         }
     }
-    .f{
+
+    .f {
         color: #FEAF0D;
     }
-    .ht{
-        &:hover{
+
+    .ht {
+        &:hover {
             text-decoration: underline !important;
         }
     }

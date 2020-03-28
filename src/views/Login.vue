@@ -34,7 +34,6 @@
 </template>
 
 <script>
-    // import upload from '@/components/upload/Upload'
     export default {
         components: {},
         data() {

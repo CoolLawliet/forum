@@ -68,7 +68,7 @@
 
 <script scoped>
     import emojiArr from "../utils/emoji";
-    import { formatTime } from "@/util/formatTime";
+    import { formatTime } from "../utils/formatTime";
     import InfoDialog from "./InfoDialog";
     export default {
         data() {
@@ -135,7 +135,7 @@
                         .then(res => {
                             if (res.code == 200) {
                                 that.textarea = "";
-                                that.$parent.getArticalDetail();
+                                that.$parent.getArticleDetail();
                                 that.$Message.success(res.msg);
                             }
                         });

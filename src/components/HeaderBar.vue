@@ -82,7 +82,7 @@
             select(name) {
                 if (name == "1") {
                     if(this.$route.name === 'Home') {
-                        this.$parent.getArticalList()
+                        this.$parent.getArticleList()
                         document.documentElement.scrollTop = 0
                     } else {
                         this.$router.push("/");
@@ -103,7 +103,7 @@
                         content: "我的消息呢?"
                     });
                 } else if (name == 5) {
-                    this.$router.push('/writeArtical')
+                    this.$router.push('/writeArticle')
                 }
             },
             loginOut() {
