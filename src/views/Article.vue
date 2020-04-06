@@ -1,6 +1,5 @@
 <template>
     <div class="">
-        <HeaderBar></HeaderBar>
         <div class="article">
             <div class="content bs">
                 <div class="list-head flex-sc">
@@ -63,7 +62,6 @@
 </template>
 
 <script>
-    import HeaderBar from '../components/HeaderBar'
     import Message from '../components/Message'
     import { mapGetters } from 'vuex'
     import { VueShowdown } from 'vue-showdown'
@@ -71,7 +69,6 @@
     import InfoDialog from "../components/InfoDialog";
     export default {
         components: {
-            HeaderBar,
             Message,
             VueShowdown,
             InfoDialog
@@ -147,7 +144,6 @@
                 }, 500)
             }
         },
-        beforeDestroy() {}
     };
 </script>
 
@@ -157,6 +153,7 @@
         justify-content: center;
         align-items: flex-start;
         border-radius: 10px;
+        margin-top: -1px;
         // margin-top: 30px;
         .content{
             width: 94%;

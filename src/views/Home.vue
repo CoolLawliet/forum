@@ -1,6 +1,5 @@
 <template>
     <div class="home">
-        <HeaderBar></HeaderBar>
         <div class="content fwb">
             <div class="left">
                 <div class="info bs">
@@ -158,7 +157,6 @@
     import { timeAgo } from "../utils/formatTime";
     import { showdown, VueShowdown } from 'vue-showdown'
 
-    import HeaderBar from "../components/HeaderBar";
     import InfoDialog from "../components/InfoDialog";
 
     export default {
@@ -344,7 +342,6 @@
             }
         },
         components: {
-            HeaderBar,
             InfoDialog
         },
     };
@@ -355,6 +352,7 @@
     .home {
         width: 100%;
         padding-bottom: 1px;
+        margin-top: -1px;
     }
 
     .sel {

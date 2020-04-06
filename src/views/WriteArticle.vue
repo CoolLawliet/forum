@@ -1,6 +1,5 @@
 <template>
     <div class="markdown">
-        <HeaderBar></HeaderBar>
         <div class="title">
             <Input v-model="article.title" class="my-input" placeholder="文章标题">
                 <!-- <span slot="prepend" class="fwb fs17 c999">文章标题</span> -->
@@ -59,13 +58,11 @@
 </template>
 
 <script>
-    import HeaderBar from "../components/HeaderBar";
     import {VueShowdown} from 'vue-showdown'
     import {mapGetters} from 'vuex'
 
     export default {
         components: {
-            HeaderBar,
             VueShowdown
         },
         data() {
@@ -222,7 +219,7 @@
         max-width: 1300px;
         min-width: 325px;
         margin: 0 auto;
-        margin-top: 15px;
+        margin-top: -1px;
 
         .my-input /deep/ input {
             font-size: 16px;

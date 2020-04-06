@@ -1,7 +1,6 @@
 <!-- 用户中心 -->
 <template>
     <div>
-        <HeaderBar></HeaderBar>
         <div class="container">
             <div class="tcommonBox">
                 <p class="w100 tc fs22 fwb">个人中心</p>
@@ -80,7 +79,6 @@
 </template>
 
 <script>
-    import HeaderBar from '../components/HeaderBar'
     import Upload from '../components/Upload'
     import { mapGetters } from 'vuex'
     export default {
@@ -134,7 +132,6 @@
             }
         },
         components: { //定义组件
-            HeaderBar,
             Upload
         },
 
@@ -148,6 +145,7 @@
         min-width: 325px;
         margin: 30px auto;
         margin-bottom: 0;
+        margin-top: -1px;
     }
     .userInfoBox .avatarlist{
         position: relative;

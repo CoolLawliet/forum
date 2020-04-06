@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <HeaderBar v-if="isShow"></HeaderBar>
         <!-- <transition name='fade'> -->
         <keep-alive include='Home'><router-view class="router"/></keep-alive>
         <!-- </transition> -->
@@ -10,6 +11,7 @@
 
 <script>
     import Footer from './components/Footer'
+    import HeaderBar from './components/HeaderBar'
     export default {
         name: 'App',
         data() {
@@ -18,7 +20,8 @@
             }
         },
         components: {
-            Footer
+            Footer,
+            HeaderBar
         },
         watch: {
             $route: function() {
