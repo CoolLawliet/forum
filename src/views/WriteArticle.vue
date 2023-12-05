@@ -27,8 +27,7 @@
         <div class="w100 flex-cc mp30">
             <div class="container">
                 <div class="mark-left" v-if='editArticle'>
-          <textarea class="textarea bs" v-model='article.content' placeholder="文章内容
-支持markdown语法, 如: # title"></textarea>
+          <textarea class="textarea bs" v-model='article.content' placeholder="文章内容支持markdown语法, 如: # title"></textarea>
                     <Button type="info" ghost size='small' class="preview" @click="showPreview(true)">预览</Button>
                 </div>
                 <!-- <div class="mark-right bs" ref='content'></div> -->

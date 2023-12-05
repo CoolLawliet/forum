@@ -13,7 +13,7 @@
                     <h2>{{userInfo.name || '--'}}</h2>
                     <div class="info-name c000 fwb fs20">
                         <div class="fs16 tc">
-                            <p class="mt5 mb5 fs15">{{userInfo.emil || '--'}}</p>
+                            <p class="mt5 mb5 fs15">{{userInfo.email || '--'}}</p>
                             <p class="fs15 mb10 mt10">{{userInfo.sex || '人妖?'}}<span class="item-class fs15">{{userInfo.label || '萌萌哒'}}</span></p>
                             <p class="c666 fs12 mt15">{{userInfo.tips || '该用户暂未填写签名'}}</p>
                         </div>

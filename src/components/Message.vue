@@ -17,7 +17,7 @@
                                     :key="'oitem'+index"
                                     @click="choseEmoji(oitem.title)"
                             >
-                                <img :src="'../../static/emoji/'+oitem.url" alt />
+                                <img :src="require('../../static/emoji/'+oitem.url)" alt />
                             </li>
                         </ul>
                         <div class="OwO-bar">
@@ -56,6 +56,7 @@
                                     class="to-mid mt10 fs17"
                             >{{analyzeEmoji(item.content)}}</p>
                         </div>
+                        <i-button @click="deleteTalk" type="error">删除</i-button>
                     </li>
                 </ul>
                 <!-- <Button type="info" class="mt20" long>查看更多</Button> -->
@@ -113,9 +114,7 @@
                         }
                         str = str.replace(
                             pattern2,
-                            '<img src="./../../static/emoji/' +
-                            src +
-                            '" style="vertical-align: middle"/>'
+                            `<img src="${require(`./../../static/emoji/${src}`)}" style="vertical-align: middle"/>`
                         );
                     }
                 }
@@ -157,6 +156,9 @@
 
             closeInfo() {
                 this.isOpen = false;
+            },
+            deleteTalk(){
+                console.log(123);
             }
         },
         watch: {

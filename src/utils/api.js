@@ -7,8 +7,8 @@ import 'iview/dist/styles/iview.css';
 
 
 const baseURL = (process.env.NODE_ENV === 'development'
-                  ? 'http://localhost:3000/api/'
-                  : 'http://47.127.238.122:3000/api/');
+                  ? 'http://101.42.233.128:3000/api/'
+                  : 'http://101.42.233.128:3000/api/');
 
 // const unLoginUrl = ['/login', '/addUser', '/userInfo']
 
@@ -19,6 +19,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 // 请求拦截
 axios.interceptors.request.use((config) => {
+    config.headers.token = Cookie.get('token')
   if (config.method === 'post') {
     config.data = qs.stringify(config.data);//这一步就是通过qs将传给后台的数据格式设置为form格式
   }
@@ -60,8 +61,7 @@ export function get(url, params){
   return new Promise((resolve, reject) =>{
       axios.get(url, {
           params: {
-            ...params,
-            token: Cookie.get('token')
+            ...params
           }
       }).then(res => {
           resolve(res.data);
@@ -72,7 +72,7 @@ export function get(url, params){
 
 export function post(url, params) {
   return new Promise((resolve, reject) => {
-       axios.post(url, {...params, token: Cookie.get('token')})
+       axios.post(url, {...params})
       .then(res => {
           resolve(res.data);
       })

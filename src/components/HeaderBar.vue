@@ -70,7 +70,9 @@
             ...mapGetters({user: 'userInfo'})
         },
         mounted(){
+          if(Cookie.get("token")){
             this.getUserInfo()
+          }
         },
         methods: {
             getUserInfo() {

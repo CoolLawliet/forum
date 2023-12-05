@@ -18,7 +18,7 @@
                         </li>
                         <li>
                             <span class="leftTitle">电子邮件</span>
-                            <span>{{userInfo.emil || '不见了 w(ﾟДﾟ)w!'}}</span>
+                            <span>{{userInfo.email || '不见了 w(ﾟДﾟ)w!'}}</span>
                         </li>
                         <li>
                             <span class="leftTitle">性别</span>

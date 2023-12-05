@@ -53,6 +53,10 @@
             </div>
             <div class="mid mb20">
                 <div class="head bs">
+<!--                    <div :class="addClass('ed')">23</div>-->
+<!--                    <div :class="{'red':isOpen===true}">23</div>-->
+<!--                    <div :class="{'red':isOpen===true,'font':isOpen===false}">23</div>-->
+<!--                    <div :class="[isOpen?'red':'font',isOpen===1?'red':'font']">23</div>-->
                     今日话题
                     <Select size="large" v-model="activedType" style="width:140px" class="sel" placeholder='分类'
                             @on-change="getArticleList(1, activedType)">
@@ -66,7 +70,7 @@
                         <div class="list-head-left flex-sc" @click="showInfo(item.author)">
                             <img :src="$crop(item.author.avatar, 35, 35, time)" alt class="list-img cp"/>
                             <div class="list-name flex-c-s">
-                                <span :class="'fs14 c333 cp' + (item.author.emil === '2216775643@qq.com' ? ' cm' : '')">{{item.author.name}}</span>
+                                <span :class="'fs14 c333 cp' + (item.author.email === '2216775643@qq.com' ? ' cm' : '')">{{item.author.name}}</span>
                                 <span class="lh100">
                   <i class="iconfont fs11">&#xe629;</i>
                   <span class="c999 fs11 lh100">{{timesAgo(item.create_time)}}</span>
@@ -201,8 +205,17 @@
             } else {
                 this.getArticleList();
             }
+            this.getArticleSort()
+            this.getArticleTypeNum()
+            this.scroll()
         },
         methods: {
+            addClass(val){
+                switch (val) {
+                    case 'red':return 'red';
+                    case 'bold':return 'font';
+                }
+            },
             getArticleList(index = 1, type = '') {
                 this.loadStyle = 'loading'
                 this.$get("/article", {
@@ -349,6 +362,12 @@
 
 
 <style scoped lang='less'>
+    .font{
+        font-weight: bold;
+    }
+    .red{
+        color: red;
+    }
     .home {
         width: 100%;
         padding-bottom: 1px;
@@ -371,10 +390,8 @@
 
     .content {
         width: 100%;
-        margin: 30px auto;
-        margin-top: 10px;
-        margin-bottom: 0;
-        display: flex;
+      margin: 0 auto;
+      display: flex;
         justify-content: center;
         align-items: flex-start;
         .c;

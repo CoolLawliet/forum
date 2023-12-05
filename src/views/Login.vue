@@ -12,7 +12,7 @@
                 </div>
                 <div class="input">
                     <i class="iconfont i">&#xe602;</i>
-                    <input type="text" placeholder="邮箱" v-model.trim="emil">
+                    <input type="text" placeholder="邮箱" v-model.trim="email">
                 </div>
                 <div class="input">
                     <i class="iconfont i">&#xe630;</i>
@@ -38,7 +38,7 @@
         data() {
             return {
                 way: '登陆',
-                emil: '',
+                email: '',
                 password: '',
                 name: ''
             };
@@ -52,11 +52,11 @@
             },
             login() {
                 if (this.way === '登陆') {
-                    if (!this.emil.trim()) {
+                    if (!this.email.trim()) {
                         this.$Message.error('邮箱不能为空')
                         return
                     }
-                    if (!/^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g.test(this.emil)) {
+                    if (!/^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g.test(this.email)) {
                         this.$Message.error('邮箱格式不正确')
                         return
                     }
@@ -70,7 +70,7 @@
                         return
                     }
                     this.$post('/users/login', {
-                        emil: this.emil,
+                        email: this.email,
                         password: this.password
                     }).then(msg => {
                         if (msg.code == 200) {
@@ -99,7 +99,7 @@
                     }
                     this.$post('/users/addUser', {
                         name: this.name,
-                        emil: this.emil,
+                        email: this.email,
                         password: this.password
                     }).then(msg => {
                         if (msg.code == 200) {

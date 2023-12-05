@@ -49,7 +49,7 @@
             fileChange(e) {
                 const _this = this
                 const file = e.target.files[0]
-                if(!this.userInfo.emil) {
+                if(!this.userInfo.email) {
                     this.$Message.error('未登录')
                     setTimeout(() => {
                         this.$router.push('/login')
